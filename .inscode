@@ -1,7 +1,7 @@
-run = "pip install -r requirements.txt;python app.py"
+run = "pip install -r requirements.txt && streamlit run app.py --server.port=8501 --server.address=0.0.0.0"
 language = "python"
 is_html = false
-is_resident = true
+is_resident = false
 is_gui = false
 
 [packager]

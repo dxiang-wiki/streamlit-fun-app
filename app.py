@@ -2,30 +2,9 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib
-from matplotlib.font_manager import FontProperties
 import random
 import time
 from datetime import datetime
-
-# 设置中文字体
-import matplotlib.font_manager as fm
-
-# 获取已安装的中文字体
-chinese_fonts = [f.name for f in fm.fontManager.ttflist if 'Hei' in f.name or 'YaHei' in f.name or 'WenQuanYi' in f.name]
-
-if chinese_fonts:
-    plt.rcParams['font.sans-serif'] = chinese_fonts
-    print(f"使用中文字体: {chinese_fonts}")
-else:
-    print("警告: 未找到中文字体，将使用默认字体")
-
-plt.rcParams['axes.unicode_minus'] = False  # 解决负号显示问题
-
-# 设置全局字体大小
-plt.rcParams['font.size'] = 12
-plt.rcParams['axes.titlesize'] = 14
-plt.rcParams['axes.labelsize'] = 12
 
 # 设置页面配置
 st.set_page_config(
@@ -50,7 +29,7 @@ def generate_data(n=100):
         '销售额': np.random.normal(1000, 200, n),
         '访问量': np.random.randint(100, 1000, n),
         '转化率': np.random.uniform(0.01, 0.1, n),
-        'Region': random.choices(['East', 'South', 'North', 'West', 'Northwest'], k=n)
+        '地区': random.choices(['华东', '华南', '华北', '西南', '西北'], k=n)
     })
     return df
 
@@ -91,11 +70,11 @@ if page == "数据概览":
     # 数据统计信息
     col1, col2, col3 = st.columns(3)
     with col1:
-        st.metric("Avg Sales", f"{df['Sales'].mean():.2f}")
+        st.metric("平均销售额", f"{df['销售额'].mean():.2f}")
     with col2:
-        st.metric("Max Visits", df['Visits'].max())
+        st.metric("最高访问量", df['访问量'].max())
     with col3:
-        st.metric("Avg Rate", f"{df['Rate'].mean() * 100:.2f}%")
+        st.metric("平均转化率", f"{df['转化率'].mean() * 100:.2f}%")
 
     # 简单图表
     st.subheader("数据趋势")
@@ -221,11 +200,19 @@ elif page == "联系我们":
     st.subheader("联系我们")
     st.write("感谢使用我们的应用！如果你有任何问题或建议，请通过以下方式联系我们：")
 
+    # 初始化会话状态
+    if 'contact_form' not in st.session_state:
+        st.session_state.contact_form = {
+            'name': '',
+            'email': '',
+            'message': ''
+        }
+
     # 联系表单
     with st.form("contact_form"):
-        name = st.text_input("姓名", key="contact_name")
-        email = st.text_input("邮箱", key="contact_email")
-        message = st.text_area("留言内容", key="contact_message")
+        name = st.text_input("姓名", value=st.session_state.contact_form['name'])
+        email = st.text_input("邮箱", value=st.session_state.contact_form['email'])
+        message = st.text_area("留言内容", value=st.session_state.contact_form['message'])
 
         submitted = st.form_submit_button("提交")
         if submitted:
@@ -234,9 +221,11 @@ elif page == "联系我们":
                 time.sleep(2)
             st.success("提交成功！我们会尽快回复你。")
             # 清空表单
-            st.session_state.contact_name = ""
-            st.session_state.contact_email = ""
-            st.session_state.contact_message = ""
+            st.session_state.contact_form = {
+                'name': '',
+                'email': '',
+                'message': ''
+            }
 
     # 联系信息
     st.write("你也可以通过以下方式联系我们：")
