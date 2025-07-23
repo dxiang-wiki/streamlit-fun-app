@@ -1,16 +1,17 @@
-run = "pip install -r requirements.txt;python main.py"
+run = "pip install -r requirements.txt && streamlit run app.py --server.port=8501 --server.address=0.0.0.0"
 language = "python"
+is_html = false
+is_resident = false
+is_gui = false
 
 [packager]
 AUTO_PIP = true
 
 [env]
-VIRTUAL_ENV = "/root/${PROJECT_DIR}/venv"
-PATH = "${VIRTUAL_ENV}/bin:${PATH}"
-PYTHONPATH = "$PYTHONHOME/lib/python3.10:${VIRTUAL_ENV}/lib/python3.10/site-packages"
-REPLIT_POETRY_PYPI_REPOSITORY = "http://mirrors.csdn.net.cn/repository/csdn-pypi-mirrors/simple"
+PATH = "${VENV_PATH}/bin:${PATH}"
+PYTHONPATH = "${VENV_PATH}/lib/python3.10/site-packages"
+REPLIT_POETRY_PYPI_REPOSITORY = "https://pypi.org/simple"  # 使用官方源避免问题
 MPLBACKEND = "TkAgg"
-POETRY_CACHE_DIR = "/root/${PROJECT_DIR}/.cache/pypoetry"
 
 [debugger]
-program = "main.py"
+program = "app.py"
