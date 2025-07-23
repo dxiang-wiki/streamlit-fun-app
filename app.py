@@ -45,16 +45,20 @@ with st.sidebar:
         "联系我们"
     ])
 
-    st.divider()
-    st.header("参数设置")
-    if page == "销售分析":
-        region = st.multiselect("选择地区", ['华东', '华南', '华北', '西南', '西北'], ['华东', '华南'])
-        date_range = st.date_input(
-            "选择日期范围",
-            [datetime(2023, 1, 1), datetime(2023, 4, 10)],
-            min_value=datetime(2023, 1, 1),
-            max_value=datetime(2023, 4, 10)
-        )
+# 初始化变量
+region = []
+date_range = []
+
+st.divider()
+st.header("参数设置")
+if page == "销售分析":
+    region = st.multiselect("选择地区", ['华东', '华南', '华北', '西南', '西北'], ['华东', '华南'])
+    date_range = st.date_input(
+        "选择日期范围",
+        [datetime(2023, 1, 1), datetime(2023, 4, 10)],
+        min_value=datetime(2023, 1, 1),
+        max_value=datetime(2023, 4, 10)
+    )
 
 # 主内容区域
 if page == "数据概览":
@@ -173,14 +177,14 @@ elif page == "实用工具":
         if rows > 0 and columns > 0:
             # 显示数据前几行
             st.write("数据前几行内容信息：")
-            st.dataframe(data.head().to_csv(sep='\t', na_rep='nan'))
+            st.dataframe(data.head())  # 直接传入 DataFrame
 
             # 选择列进行分析
             selected_column = st.selectbox("选择一列进行分析", data.columns)
 
             # 显示列统计信息
             st.write(f"列 '{selected_column}' 的统计信息：")
-            st.dataframe(data[selected_column].describe().to_csv(sep='\t', na_rep='nan'))
+            st.dataframe(data[selected_column].describe())  # 直接传入 DataFrame
 
             # 绘制直方图
             st.write(f"列 '{selected_column}' 的直方图：")
@@ -196,11 +200,19 @@ elif page == "联系我们":
     st.subheader("联系我们")
     st.write("感谢使用我们的应用！如果你有任何问题或建议，请通过以下方式联系我们：")
 
+    # 初始化会话状态
+    if 'contact_form' not in st.session_state:
+        st.session_state.contact_form = {
+            'name': '',
+            'email': '',
+            'message': ''
+        }
+
     # 联系表单
     with st.form("contact_form"):
-        name = st.text_input("姓名")
-        email = st.text_input("邮箱")
-        message = st.text_area("留言内容")
+        name = st.text_input("姓名", value=st.session_state.contact_form['name'])
+        email = st.text_input("邮箱", value=st.session_state.contact_form['email'])
+        message = st.text_area("留言内容", value=st.session_state.contact_form['message'])
 
         submitted = st.form_submit_button("提交")
         if submitted:
@@ -209,9 +221,11 @@ elif page == "联系我们":
                 time.sleep(2)
             st.success("提交成功！我们会尽快回复你。")
             # 清空表单
-            name = ""
-            email = ""
-            message = ""
+            st.session_state.contact_form = {
+                'name': '',
+                'email': '',
+                'message': ''
+            }
 
     # 联系信息
     st.write("你也可以通过以下方式联系我们：")

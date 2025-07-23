@@ -11,7 +11,8 @@ AUTO_PIP = true
 PATH = "${VENV_PATH}/bin:${PATH}"
 PYTHONPATH = "${VENV_PATH}/lib/python3.10/site-packages"
 REPLIT_POETRY_PYPI_REPOSITORY = "https://pypi.org/simple"  # 使用官方源避免问题
-MPLBACKEND = "TkAgg"
+# 如果运行环境无图形界面，使用 Agg 后端
+MPLBACKEND = "Agg"
 
 [debugger]
 program = "app.py"
