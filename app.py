@@ -169,7 +169,7 @@ elif page == "实用工具":
 
         # 显示数据信息
         st.write("数据基本信息：")
-        data.info()
+        st.write(data.describe())  # 更适合 Streamlit 展示
 
         # 显示数据集行数和列数
         rows, columns = data.shape
