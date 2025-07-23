@@ -18,6 +18,10 @@ st.set_page_config(
 st.title("趣味数据应用")
 st.markdown("这是一个使用Streamlit开发的趣味应用，展示了数据可视化、小游戏和实用工具等功能。")
 
+# matplotlib 中文显示设置
+plt.rcParams['font.sans-serif'] = ['SimHei', 'Microsoft YaHei', 'WenQuanYi Zen Hei']  # 支持中文
+plt.rcParams['axes.unicode_minus'] = False  # 正常显示负号
+
 
 # 模拟数据生成函数
 @st.cache_data
@@ -167,7 +171,7 @@ elif page == "实用工具":
         # 读取数据
         data = pd.read_csv(uploaded_file)
 
-        # 显示数据信息
+        # 昲示数据信息
         st.write("数据基本信息：")
         st.write(data.describe())  # 更适合 Streamlit 展示
 
